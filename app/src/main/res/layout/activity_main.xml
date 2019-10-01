@@ -38,8 +38,18 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="259dp"
-            android:text="TextView" /><![CDATA[/>
+            android:text="TextView" />
 
-        ]]>
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ranking"
+            android:layout_marginTop="35dp"/><![CDATA[
+
+        />
+
+
+    ]]>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
