@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import java.util.Random;
 
@@ -53,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
              rankingButton.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
-                   RankingActivity rk=new RankingActivity();
-                     setContentView(R.layout.activity_ranking);
+                     Intent intent = new Intent (v.getContext(), RankingActivity.class);
+                     startActivityForResult(intent, 0);
+
                  }
              });
 

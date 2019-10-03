@@ -13,19 +13,26 @@
         tools:layout_editor_absoluteX="192dp"
         tools:layout_editor_absoluteY="248dp">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="#ECCA00"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:navigationIcon="@android:drawable/ic_menu_revert" />
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
-            android:layout_height="356dp"
-            android:text="TextView" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="224dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_height="426dp"
             android:layout_marginTop="35dp"
-            android:layout_marginBottom="100dp"
-            android:text="Volver" />/>
+            android:text="TextView" /><![CDATA[
+
+
+
+        />
+
+    ]]>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
