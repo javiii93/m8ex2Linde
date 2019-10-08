@@ -1,47 +1,37 @@
 package com.example.pr1_2_endevinaelnombre;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Button;
-import android.widget.Toolbar;
 
 import java.util.ArrayList;
-
+import  java.io.*;
 public class RankingActivity extends AppCompatActivity {
-    ArrayList<Integer>jugadores=new ArrayList<>();
-
-
-    Toolbar barra;
-    TextView nombresDeRanking;
+TextView tx;
+ArrayList<String>jugadores=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
-
-        barra= findViewById(R.id.toolbar);
-        nombresDeRanking= findViewById(R.id.textView3);
-        for(int i=0;i<jugadores.size();i++){
-            nombresDeRanking.setText(nombresDeRanking.getText()+"\n"+jugadores.get(i).toString());
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        tx=findViewById(R.id.textView);
+        try
+        {OutputStream opsw=
+                    new OutputStream(("prueba.txt", MODE_PRIVATE));
+            opsw.close();
         }
-         barra = (Toolbar) findViewById(R.id.toolbar);
-     barra.setNavigationIcon(R.drawable.ic_menu_revert);
-        barra.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Implemented by activity
-            }
-        });
+        catch (Exception ex)
+        {
+        }
 
-    }
-    public ArrayList<Integer> getJugadores() {
-        return jugadores;
-    }
-
-    public void setJugadores(ArrayList<Integer> jugadores) {
-        this.jugadores = jugadores;
     }
 
 }

@@ -1,8 +1,11 @@
 package com.example.pr1_2_endevinaelnombre;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-
+import android.content.DialogInterface;
+import android.support.v4.app.*;
+import android.app.DialogFragment;
+import android.app.AlertDialog;
+import java.io.*;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,22 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-     Button checkButton;
+    ArrayList<String>datosGanadores=new ArrayList<>();
+    Button checkButton;
     Button rankingButton;
     TextView textView1;
     EditText usernumber;
-    final int numberToSolve=new Random().nextInt(100);
-    String comentario;
-    int contadorIntentos=0,nombre;
+    int numberToSolve=new Random().nextInt(100);
+    String comentario,nickname;
+    int contadorIntentos,nombre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkButton= findViewById(R.id.button);
+         checkButton= findViewById(R.id.button);
         rankingButton=findViewById(R.id.button2);
         usernumber = findViewById(R.id.editText);
         textView1= findViewById(R.id.textView4);
@@ -48,21 +53,88 @@ public class MainActivity extends AppCompatActivity {
                     textView1.setText("Congratulations, has adivinado el numero oculto, era el: "+numberToSolve+" Tu puntacion ha sido de "+contadorIntentos+" puntos.");
                     comentario="Lo has 'clavao' papi";
                     Toast.makeText(getApplicationContext(),comentario, Toast.LENGTH_LONG).show();
-                }
+                   dialogo();
+                  }
             }
         });
              rankingButton.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
-                     Intent intent = new Intent (v.getContext(), RankingActivity.class);
-                     startActivityForResult(intent, 0);
+                   Intent intent = new Intent (v.getContext(), RankingActivity.class);
+                     startActivity(intent);
 
                  }
              });
 
         }
 
+    public void dialogo()
+    {
+final String menssage="Escriba su apodo para guardar su puntuacion, si no quiere pulse cancelar";
 
+        final AlertDialog.Builder builder
+                = new AlertDialog
+                .Builder(MainActivity.this);
+
+        builder.setMessage(menssage);
+
+        builder.setTitle("Hello makina, tu puntuacion es de "+contadorIntentos);
+
+        builder.setCancelable(false);
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+
+        builder
+                .setPositiveButton(
+                        "Añadir",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+                                nickname=input.getText().toString()+","+contadorIntentos+" puntos";
+                                contadorIntentos=0;
+                                try
+                                {
+                                    OutputStreamWriter opsw=
+                                            new OutputStreamWriter(
+                                                    openFileOutput("prueba.txt", MODE_PRIVATE));
+
+                                    opsw.write(nickname);
+                                    opsw.close();
+                                }
+                                catch (Exception ex)
+                                {
+                                }
+                                Intent i=new Intent(builder.getContext(),RankingActivity.class);
+                               startActivity(i);
+                  }
+                        });
+
+
+        builder
+                .setNegativeButton(
+                        "Cancelar",
+                        new DialogInterface
+                                .OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which)
+                            {
+
+                              finish();
+                            }
+                        });
+
+
+        AlertDialog alertDialog = builder.create();
+
+         alertDialog.show();
     }
+}
 
 
