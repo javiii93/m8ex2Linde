@@ -2,8 +2,6 @@ package com.example.pr1_2_endevinaelnombre;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
-import android.support.v4.app.*;
-import android.app.DialogFragment;
 import android.app.AlertDialog;
 import java.io.*;
 import android.os.Bundle;
@@ -18,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<String>datosGanadores=new ArrayList<>();
+   static ArrayList<Jugador>players=new ArrayList<>();
     Button checkButton;
     Button rankingButton;
     TextView textView1;
@@ -54,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
                     comentario="Lo has 'clavao' papi";
                     Toast.makeText(getApplicationContext(),comentario, Toast.LENGTH_LONG).show();
                    dialogo();
-                  }
+                  }usernumber.setText("");
             }
         });
              rankingButton.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
-                   Intent intent = new Intent (v.getContext(), RankingActivity.class);
+                   Intent intent = new Intent (v.getContext(), Ranking2Activity.class);
                      startActivity(intent);
 
                  }
@@ -95,22 +93,16 @@ final String menssage="Escriba su apodo para guardar su puntuacion, si no quiere
                             public void onClick(DialogInterface dialog,
                                                 int which)
                             {
-                                nickname=input.getText().toString()+","+contadorIntentos+" puntos";
-                                contadorIntentos=0;
-                                try
-                                {
-                                    OutputStreamWriter opsw=
-                                            new OutputStreamWriter(
-                                                    openFileOutput("prueba.txt", MODE_PRIVATE));
+                                nickname=input.getText().toString();
 
-                                    opsw.write(nickname);
-                                    opsw.close();
-                                }
-                                catch (Exception ex)
-                                {
-                                }
-                                Intent i=new Intent(builder.getContext(),RankingActivity.class);
-                               startActivity(i);
+                                //+" ,"+contadorIntentos;
+                               int numm=contadorIntentos;
+                               Jugador j1=new Jugador(nickname,numm);
+                               players.add(j1);
+                                contadorIntentos=0;
+
+                                Intent i=new Intent(builder.getContext(),Ranking2Activity.class);
+                                startActivity(i);
                   }
                         });
 
