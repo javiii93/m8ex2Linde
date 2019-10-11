@@ -1,18 +1,11 @@
 package com.example.pr1_2_endevinaelnombre;
-
 import android.os.Bundle;
-
-
+import java.util.Collections;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.*;
 
-
-import java.util.ArrayList;
-
 public class Ranking2Activity extends AppCompatActivity {
-
-
-
+String jug;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,21 +16,12 @@ public class Ranking2Activity extends AppCompatActivity {
         adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         lista.setAdapter(adaptador);
         MainActivity ma=new MainActivity();
-for(int i=0;i<MainActivity.players.size();i++){
-    adaptador.add(MainActivity.players.get());
-
+        Collections.sort(ma.players);
+for(int i=0;i< ma.players.size();i++){
+    jug=ma.players.get(i).nom+", "+ma.players.get(i).punts+" puntos";
+    adaptador.add(jug);
 }
-     /*   if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                newString= null;
-            } else {
-                newString= extras.getString("player");
-                adaptador.add(newString);
-            }
-        } else {
-            newString= (String) savedInstanceState.getSerializable("player");
-            }*/
+
 }
 
 

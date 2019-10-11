@@ -3,7 +3,6 @@ package com.example.pr1_2_endevinaelnombre;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
-import java.io.*;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -48,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     textView1.setText("Numero Intents: "+contadorIntentos+" Numero a adivinar: "+numberToSolve);
                 Toast.makeText(getApplicationContext(),comentario, Toast.LENGTH_LONG).show();
             }else{
-                    textView1.setText("Congratulations, has adivinado el numero oculto, era el: "+numberToSolve+" Tu puntacion ha sido de "+contadorIntentos+" puntos.");
+                    textView1.setText("Congratulations, has adivinado el numero oculto, era el: "+numberToSolve+" Tu puntacion ha sido de "+contadorIntentos+" puntos, si quieres empezar de nuevo sigue escribiendo numeros");
                     comentario="Lo has 'clavao' papi";
                     Toast.makeText(getApplicationContext(),comentario, Toast.LENGTH_LONG).show();
                    dialogo();
@@ -95,13 +93,13 @@ final String menssage="Escriba su apodo para guardar su puntuacion, si no quiere
                             {
                                 nickname=input.getText().toString();
 
-                                //+" ,"+contadorIntentos;
+
                                int numm=contadorIntentos;
                                Jugador j1=new Jugador(nickname,numm);
                                players.add(j1);
                                 contadorIntentos=0;
-
-                                Intent i=new Intent(builder.getContext(),Ranking2Activity.class);
+                                numberToSolve=new Random().nextInt(100);
+                               Intent i=new Intent(builder.getContext(),Ranking2Activity.class);
                                 startActivity(i);
                   }
                         });

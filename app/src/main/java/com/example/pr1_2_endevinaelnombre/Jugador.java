@@ -8,7 +8,7 @@ public class Jugador implements Comparable<Jugador>{
         this.nom = nom;
         this.punts=punts;
     }
-
+    public Jugador(){};
     @Override
     public int compareTo(Jugador o) {
 
