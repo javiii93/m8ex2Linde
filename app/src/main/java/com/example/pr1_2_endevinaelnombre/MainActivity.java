@@ -101,6 +101,7 @@ final String menssage="Escriba su apodo para guardar su puntuacion, si no quiere
                                 numberToSolve=new Random().nextInt(100);
                                Intent i=new Intent(builder.getContext(),Ranking2Activity.class);
                                 startActivity(i);
+
                   }
                         });
 
