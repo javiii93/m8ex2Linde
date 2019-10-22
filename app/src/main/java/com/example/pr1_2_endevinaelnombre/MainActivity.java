@@ -12,6 +12,7 @@ import android.widget.Toast;
 import android.content.Intent;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
    static ArrayList<Jugador>players=new ArrayList<>();
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 nombre=Integer.parseInt(usernumber.getText().toString());
                 contadorIntentos++;
                 if(nombre<numberToSolve){
+
                     comentario="El numero que buscas es mayor";
                     textView1.setText("Numero Intents: "+contadorIntentos+" Numero a adivinar: "+numberToSolve);
                     Toast.makeText(getApplicationContext(),comentario, Toast.LENGTH_LONG).show();
