@@ -22,6 +22,7 @@ import javax.xml.transform.stream.StreamResult;
 public class Ranking2Activity extends AppCompatActivity {
 String jug;
 int cont=0;
+
     MainActivity ma=new MainActivity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,22 +30,31 @@ int cont=0;
         File file = new File(getFilesDir(), "players.xml");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
+
         ListView lista;
-        ArrayAdapter<String> adaptador;
-        lista = findViewById(R.id.listView);
-        adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
-        lista.setAdapter(adaptador);
-        if(file.exists()&&cont==0){
+        if(file.exists()&& cont==0){
             recuperarJugadores();
             cont++;
         }
         Collections.sort(ma.players);
+        lista = findViewById(R.id.listView);
+        ArrayAdapter<Jugador> adaptador = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,ma.players);
+        lista.setAdapter(adaptador);
 
-
+        /*
 for(int i=0;i< ma.players.size();i++){
-    jug=ma.players.get(i).nom+", "+ma.players.get(i).punts+" puntos";
-    adaptador.add(jug);
-}
+ //  jug=ma.players.get(i).nom+", "+ma.players.get(i).punts+" puntos";
+  // adaptador.add(jug);
+    adaptador.add(ma.players.get(i));
+}*/
+
+escrituraJugadoresXML();
+
+
+/*
+for(int j=0;j<adaptador.getCount();j++){
+    adaptador.remove();
+}*/
 
 }public void escrituraJugadoresXML(){
         File file = new File(getFilesDir(), "players.xml");
@@ -111,14 +121,6 @@ public void recuperarJugadores(){
     } catch(Exception e) {
         e.printStackTrace();
     }
-
-
-
-
-
-
-
-
 
 
 }

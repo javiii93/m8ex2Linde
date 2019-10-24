@@ -22,4 +22,9 @@ public class Jugador implements Comparable<Jugador>{
 
 
     }
+
+    @Override
+    public String toString() {
+        return "Apodo: " + nom +", puntuacion: " + punts;
+    }
 }

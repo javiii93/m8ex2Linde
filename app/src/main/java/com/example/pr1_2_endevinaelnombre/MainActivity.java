@@ -12,7 +12,6 @@ import android.widget.Toast;
 import android.content.Intent;
 import java.util.ArrayList;
 import java.util.Random;
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
    static ArrayList<Jugador>players=new ArrayList<>();
