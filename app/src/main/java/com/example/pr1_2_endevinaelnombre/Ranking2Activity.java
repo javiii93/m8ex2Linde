@@ -24,9 +24,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static com.example.pr1_2_endevinaelnombre.MainActivity.players;
+
 public class Ranking2Activity extends AppCompatActivity {
     String jug;
-    MainActivity ma = new MainActivity();
     Jugador j5;
     boolean see;
 
@@ -36,47 +37,28 @@ public class Ranking2Activity extends AppCompatActivity {
         File file = new File(getFilesDir(), "players.xml");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
-        if (!ma.players.isEmpty()) {
-            j5 = ma.players.get(ma.players.size() - 1);
+        if (!players.isEmpty()) {
+            j5 = players.get(players.size() - 1);
         }
 
-   /* if(f.exists()){
-        try {
-            sc=new Scanner(f);
-            cont=sc.nextInt();
-            sc.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }*/
         ListView lista;
         if (file.exists()) {
-            ma.players.clear();
+            players.clear();
             recuperarJugadores();
             if (j5 != null) {
 
-                if (ma.players.get(ma.players.size() - 1).nom.equals(j5.nom) && ma.players.get(ma.players.size() - 1).punts == j5.punts) {
+                if (players.get(players.size() - 1).nom.equals(j5.nom) && players.get(players.size() - 1).punts == j5.punts) {
 
                 } else {
-                    ma.players.add(j5);
+                    players.add(j5);
 
                 }
             }
-         /*   try {
-                RandomAccessFile raf = new RandomAccessFile(f, "rw");
-                cont++;
-                raf.writeInt(cont);
-                raf.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }catch (IOException e){
-                e.printStackTrace();
-            }*/
+
         }
-        Collections.sort(ma.players);
+        Collections.sort(players);
         lista = findViewById(R.id.listView);
-        ArrayAdapter<Jugador> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ma.players);
+        ArrayAdapter<Jugador> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, players);
         lista.setAdapter(adaptador);
 
         /*
@@ -95,11 +77,7 @@ for(int j=0;j<adaptador.getCount();j++){
 
     }
 
-    public void salida() {
-        escrituraJugadoresXML();
-        finish();
-        // System.exit(0);
-    }
+
 
     public void escrituraJugadoresXML() {
         File file = new File(getFilesDir(), "players.xml");
@@ -111,7 +89,7 @@ for(int j=0;j<adaptador.getCount();j++){
             // definimos el elemento raíz del documento
             Element eRaiz = doc.createElement("jugadores");
             doc.appendChild(eRaiz);
-            for (int i = 0; i < ma.players.size(); i++) {
+            for (int i = 0; i < players.size(); i++) {
                 // definimos el nodo que contendrá los elementos
                 Element eJugador = doc.createElement("jugador");
                 eRaiz.appendChild(eJugador);
@@ -121,10 +99,10 @@ for(int j=0;j<adaptador.getCount();j++){
                 eJugador.setAttributeNode(attr);
                 // definimos cada uno de los elementos y le asignamos un valor
                 Element eNombre = doc.createElement("nombre");
-                eNombre.appendChild(doc.createTextNode(ma.players.get(i).nom));
+                eNombre.appendChild(doc.createTextNode(players.get(i).nom));
                 eJugador.appendChild(eNombre);
                 Element ePuntuacion = doc.createElement("puntuacion");
-                ePuntuacion.appendChild(doc.createTextNode(String.valueOf(ma.players.get(i).punts)));
+                ePuntuacion.appendChild(doc.createTextNode(String.valueOf(players.get(i).punts)));
                 eJugador.appendChild(ePuntuacion);
             }
             // clases necesarias finalizar la creación del archivo XML
@@ -154,7 +132,7 @@ for(int j=0;j<adaptador.getCount();j++){
                     Jugador j1 = new Jugador();
                     j1.nom = eElement.getElementsByTagName("nombre").item(0).getTextContent();
                     j1.punts = Integer.parseInt(eElement.getElementsByTagName("puntuacion").item(0).getTextContent());
-                    ma.players.add(j1);
+                    players.add(j1);
                 }
             }
         } catch (Exception e) {

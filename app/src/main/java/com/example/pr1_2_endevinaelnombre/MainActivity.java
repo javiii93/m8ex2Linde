@@ -19,6 +19,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     static ArrayList<Jugador> players = new ArrayList<>();
     Button checkButton;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     Button exit;
     Button rankingButton;
     TextView textView1;
@@ -73,14 +74,16 @@ exit.setOnClickListener(new View.OnClickListener() {
     public void onClick(View v) {
         //Ranking2Activity ra=new Ranking2Activity();
         // ra.salida();
+
        salida();
     }
 });
-
-    }
+            }
 public void salida(){
         finish();
 }
+
+
 public void eliminarRepetidos(){
 
     Set<Jugador> hs = new HashSet<>(players);
@@ -123,6 +126,15 @@ public void eliminarRepetidos(){
                                 startActivity(i);
                             }
                         });
+        builder.setNeutralButton("Foto", new DialogInterface
+                .OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog,
+                                int which) {
+
+            }
+        });
         builder
                 .setNegativeButton(
                         "Cancelar",
