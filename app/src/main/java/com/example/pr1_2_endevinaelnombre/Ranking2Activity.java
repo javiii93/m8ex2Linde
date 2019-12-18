@@ -58,7 +58,8 @@ public class Ranking2Activity extends AppCompatActivity {
         }
         Collections.sort(players);
         lista = findViewById(R.id.listView);
-        ArrayAdapter<Jugador> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, players);
+       // ArrayAdapter<Jugador> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, players);
+        CustomAdapterJugador adaptador=new CustomAdapterJugador(players,this);
         lista.setAdapter(adaptador);
 
         /*
