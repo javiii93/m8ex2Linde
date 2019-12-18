@@ -1,5 +1,7 @@
 package com.example.pr1_2_endevinaelnombre;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import java.time.Clock;
@@ -37,12 +39,12 @@ public class Ranking2Activity extends AppCompatActivity {
         File file = new File(getFilesDir(), "players.xml");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
-        if (!players.isEmpty()) {
+       /* if (!players.isEmpty()) {
             j5 = players.get(players.size() - 1);
-        }
+        }*/
 
         ListView lista;
-        if (file.exists()) {
+       /* if (file.exists()) {
             players.clear();
             recuperarJugadores();
             if (j5 != null) {
@@ -55,7 +57,7 @@ public class Ranking2Activity extends AppCompatActivity {
                 }
             }
 
-        }
+        }*/
         Collections.sort(players);
         lista = findViewById(R.id.listView);
        // ArrayAdapter<Jugador> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, players);
@@ -68,7 +70,7 @@ for(int i=0;i< ma.players.size();i++){
   adaptador.add(jug);
     adaptador.add(ma.players.get(i));
 }*/
-        escrituraJugadoresXML();
+       // escrituraJugadoresXML();
 //file.delete();
 
 /*
@@ -105,6 +107,9 @@ for(int j=0;j<adaptador.getCount();j++){
                 Element ePuntuacion = doc.createElement("puntuacion");
                 ePuntuacion.appendChild(doc.createTextNode(String.valueOf(players.get(i).punts)));
                 eJugador.appendChild(ePuntuacion);
+                Element arrayByte = doc.createElement("fotoByte");
+                arrayByte.appendChild(doc.createTextNode(String.valueOf(players.get(i).getArray())));
+                eJugador.appendChild(arrayByte);
             }
             // clases necesarias finalizar la creación del archivo XML
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -133,6 +138,8 @@ for(int j=0;j<adaptador.getCount();j++){
                     Jugador j1 = new Jugador();
                     j1.nom = eElement.getElementsByTagName("nombre").item(0).getTextContent();
                     j1.punts = Integer.parseInt(eElement.getElementsByTagName("puntuacion").item(0).getTextContent());
+                    j1.array=eElement.getElementsByTagName("fotoByte").item(0).getTextContent().getBytes();
+                    j1.bitmap= BitmapFactory.decodeByteArray(j1.array, 0, j1.array.length);
                     players.add(j1);
                 }
             }

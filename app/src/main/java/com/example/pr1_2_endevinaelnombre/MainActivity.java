@@ -1,11 +1,14 @@
 package com.example.pr1_2_endevinaelnombre;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,8 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +37,13 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 public class MainActivity extends AppCompatActivity {
     static ArrayList<Jugador> players = new ArrayList<>();
@@ -40,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     int contadorIntentos, nombre;
     ImageView imageView;
     Jugador j1 = new Jugador();
+    File file,photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         rankingButton = findViewById(R.id.button2);
         exit = findViewById(R.id.button3);
         usernumber = findViewById(R.id.editText);
+        file = new File(getFilesDir(), "players.xml");
         textView1 = findViewById(R.id.textView4);
         textView1.setText("Numero Intents: " + contadorIntentos + " Numero a adivinar: " + numberToSolve);
         checkButton.setOnClickListener(new View.OnClickListener() {
@@ -132,13 +152,24 @@ public void eliminarRepetidos(){
                                 nickname = input.getText().toString();
                                 int numm = contadorIntentos;
                                 j1 = new Jugador(nickname, numm);
-
+                               // photo= createImageFile();
+                                //System.out.println(j1.getCurrentPhotoPath());
                                 contadorIntentos = 0;
                                 numberToSolve = new Random().nextInt(100);
                                 if(j1.getBitmap()==null){
                                     dispatchTakePictureIntent();
                                 }
+
+
+
+                               if(file.exists()){
+                                   recuperarJugadores();
+                                }
+
                                 players.add(j1);
+
+                                escrituraJugadoresXML();
+
 
                             }
                         });
@@ -165,38 +196,125 @@ public void eliminarRepetidos(){
     public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
-    public void guardarFoto(Jugador j){
-        Bitmap bmp;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp =  j.getBitmap();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte array[] = baos.toByteArray();
-    }
-    @Override
+   /* private File createImageFile(){
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageFileName,  *//* prefix *//*
+                    ".jpg",         *//* suffix *//*
+                    storageDir      *//* directory *//*
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Save a file: path for use with ACTION_VIEW intents
+        j1.setCurrentPhotoPath(image.getAbsolutePath());
+        System.out.println(j1.getCurrentPhotoPath());
+        return image;
+    }*/
+      @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             j1.setBitmap(imageBitmap);
+         /*   ByteArrayOutputStream baos = new ByteArrayOutputStream();
+           imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+           j1.setArray( baos.toByteArray());
+           j1.foto=baos.toByteArray().toString();
+            System.out.println(j1.getArray());
+            FileOutputStream fOut = null;
+            try {
+                fOut = new FileOutputStream(photo);
+                j1.getBitmap().compress(Bitmap.CompressFormat.JPEG, 99, fOut);
+                fOut.flush();
+                fOut.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+*/
+
         }
     }
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        j1.setCurrentPhotoPath(image.getAbsolutePath());
-        return image;
+    public void escrituraJugadoresXML() {
+
+        File file = new File(getFilesDir(), "players.xml");
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.newDocument();
+
+            // definimos el elemento raíz del documento
+            Element eRaiz = doc.createElement("jugadores");
+            doc.appendChild(eRaiz);
+            for (int i = 0; i < players.size(); i++) {
+                // definimos el nodo que contendrá los elementos
+                Element eJugador = doc.createElement("jugador");
+                eRaiz.appendChild(eJugador);
+                // atributo para el nodo jugador
+                Attr attr = doc.createAttribute("Numero");
+                attr.setValue(String.valueOf(i + 1));
+                eJugador.setAttributeNode(attr);
+                // definimos cada uno de los elementos y le asignamos un valor
+                Element eNombre = doc.createElement("nombre");
+                eNombre.appendChild(doc.createTextNode(players.get(i).nom));
+                eJugador.appendChild(eNombre);
+                Element ePuntuacion = doc.createElement("puntuacion");
+                ePuntuacion.appendChild(doc.createTextNode(String.valueOf(players.get(i).punts)));
+                eJugador.appendChild(ePuntuacion);
+             /*  Element eFotoPath = doc.createElement("fotoPath");
+                eFotoPath.appendChild(doc.createTextNode(players.get(i).getCurrentPhotoPath()));
+                eJugador.appendChild(eFotoPath);*/
+            }
+            // clases necesarias finalizar la creación del archivo XML
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(file);
+            transformer.transform(source, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void recuperarJugadores() {
+        players.clear();
+        File file = new File(getFilesDir(), "players.xml");
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+            NodeList nList = doc.getElementsByTagName("jugador");
+            System.out.println("Número de jugadores: " + nList.getLength());
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                Node nNode = nList.item(temp);
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
+                    Jugador j1 = new Jugador();
+                    j1.nom = eElement.getElementsByTagName("nombre").item(0).getTextContent();
+                    j1.punts = Integer.parseInt(eElement.getElementsByTagName("puntuacion").item(0).getTextContent());
+                   /* j1.array=eElement.getElementsByTagName("fotoPath").item(0).getTextContent().getBytes("UTF-8");
+                    j1.bitmap= BitmapFactory.decodeByteArray(j1.array, 0, j1.array.length);*/
+                    players.add(j1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

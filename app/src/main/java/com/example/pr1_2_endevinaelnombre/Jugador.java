@@ -2,14 +2,26 @@ package com.example.pr1_2_endevinaelnombre;
 
 import android.graphics.Bitmap;
 
-public class Jugador implements Comparable<Jugador>{
+import java.io.Serializable;
+
+public class Jugador implements Comparable<Jugador>, Serializable {
     public String nom;
     public int punts;
     public String currentPhotoPath;
+    public byte[] array;
+    public String foto;
     public Bitmap bitmap;
     public Jugador(String nom, int punts) {
         this.nom = nom;
         this.punts=punts;
+    }
+
+    public byte[] getArray() {
+        return array;
+    }
+
+    public void setArray(byte[] array) {
+        this.array = array;
     }
 
     public String getCurrentPhotoPath() {
