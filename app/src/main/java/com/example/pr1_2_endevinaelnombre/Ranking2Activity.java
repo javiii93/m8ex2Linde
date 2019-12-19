@@ -82,7 +82,7 @@ for(int j=0;j<adaptador.getCount();j++){
 
 
 
-    public void escrituraJugadoresXML() {
+    /*public void escrituraJugadoresXML() {
         File file = new File(getFilesDir(), "players.xml");
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -146,6 +146,6 @@ for(int j=0;j<adaptador.getCount();j++){
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
 

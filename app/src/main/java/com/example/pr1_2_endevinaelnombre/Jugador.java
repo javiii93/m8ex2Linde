@@ -1,27 +1,17 @@
 package com.example.pr1_2_endevinaelnombre;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 
-import java.io.Serializable;
 
-public class Jugador implements Comparable<Jugador>, Serializable {
+public class Jugador implements Comparable<Jugador> {
     public String nom;
     public int punts;
     public String currentPhotoPath;
-    public byte[] array;
-    public String foto;
-    public Bitmap bitmap;
+    public Uri uri;
+
     public Jugador(String nom, int punts) {
         this.nom = nom;
         this.punts=punts;
-    }
-
-    public byte[] getArray() {
-        return array;
-    }
-
-    public void setArray(byte[] array) {
-        this.array = array;
     }
 
     public String getCurrentPhotoPath() {
@@ -48,26 +38,21 @@ public class Jugador implements Comparable<Jugador>, Serializable {
         this.punts = punts;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public Uri getUri() {
+        return uri;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public void setUri(Uri uri) {
+        this.uri = uri;
     }
 
     public Jugador(){};
     @Override
     public int compareTo(Jugador o) {
-
-
         if (this.punts<o.punts) {  return -1;     }
 
         else if (this.punts>o.punts) {   return 1;     }
-
-
         return 0;
-
 
     }
 

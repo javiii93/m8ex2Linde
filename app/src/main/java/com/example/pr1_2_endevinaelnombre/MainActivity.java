@@ -117,13 +117,7 @@ public void salida(){
 }
 
 
-public void eliminarRepetidos(){
 
-    Set<Jugador> hs = new HashSet<>(players);
-    players.clear();
-    players.addAll(hs);
-
-}
     public void dialogo() {
         final String menssage = "Escriba su apodo para guardar su puntuacion, si no quiere pulse cancelar";
 
@@ -156,21 +150,14 @@ public void eliminarRepetidos(){
                                 //System.out.println(j1.getCurrentPhotoPath());
                                 contadorIntentos = 0;
                                 numberToSolve = new Random().nextInt(100);
-                                if(j1.getBitmap()==null){
+                                if(j1.getCurrentPhotoPath()==null){
                                     dispatchTakePictureIntent();
                                 }
-
-
-
                                if(file.exists()){
                                    recuperarJugadores();
                                 }
-
                                 players.add(j1);
-
                                 escrituraJugadoresXML();
-
-
                             }
                         });
 
@@ -196,56 +183,45 @@ public void eliminarRepetidos(){
     public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                System.out.println("No se ha creado el fichero de la imagen");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
-   /* private File createImageFile(){
+
+    private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = null;
-        try {
-            image = File.createTempFile(
-                    imageFileName,  *//* prefix *//*
-                    ".jpg",         *//* suffix *//*
-                    storageDir      *//* directory *//*
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
 
         // Save a file: path for use with ACTION_VIEW intents
         j1.setCurrentPhotoPath(image.getAbsolutePath());
-        System.out.println(j1.getCurrentPhotoPath());
         return image;
-    }*/
-      @Override
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            j1.setBitmap(imageBitmap);
-         /*   ByteArrayOutputStream baos = new ByteArrayOutputStream();
-           imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-           j1.setArray( baos.toByteArray());
-           j1.foto=baos.toByteArray().toString();
-            System.out.println(j1.getArray());
-            FileOutputStream fOut = null;
-            try {
-                fOut = new FileOutputStream(photo);
-                j1.getBitmap().compress(Bitmap.CompressFormat.JPEG, 99, fOut);
-                fOut.flush();
-                fOut.close();
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-*/
-
+           // Bundle extras = data.getExtras();
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+            j1.setUri(Uri.parse(j1.currentPhotoPath));
         }
     }
 
@@ -275,9 +251,9 @@ public void eliminarRepetidos(){
                 Element ePuntuacion = doc.createElement("puntuacion");
                 ePuntuacion.appendChild(doc.createTextNode(String.valueOf(players.get(i).punts)));
                 eJugador.appendChild(ePuntuacion);
-             /*  Element eFotoPath = doc.createElement("fotoPath");
+              Element eFotoPath = doc.createElement("UriPath");
                 eFotoPath.appendChild(doc.createTextNode(players.get(i).getCurrentPhotoPath()));
-                eJugador.appendChild(eFotoPath);*/
+                eJugador.appendChild(eFotoPath);
             }
             // clases necesarias finalizar la creación del archivo XML
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -307,8 +283,7 @@ public void eliminarRepetidos(){
                     Jugador j1 = new Jugador();
                     j1.nom = eElement.getElementsByTagName("nombre").item(0).getTextContent();
                     j1.punts = Integer.parseInt(eElement.getElementsByTagName("puntuacion").item(0).getTextContent());
-                   /* j1.array=eElement.getElementsByTagName("fotoPath").item(0).getTextContent().getBytes("UTF-8");
-                    j1.bitmap= BitmapFactory.decodeByteArray(j1.array, 0, j1.array.length);*/
+                   j1.currentPhotoPath=eElement.getElementsByTagName("UriPath").item(0).getTextContent();
                     players.add(j1);
                 }
             }
