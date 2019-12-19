@@ -5,9 +5,6 @@ import androidx.core.content.FileProvider;
 
 import android.content.DialogInterface;
 import android.app.AlertDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,15 +23,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -58,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     int contadorIntentos, nombre;
     ImageView imageView;
     Jugador j1 = new Jugador();
-    File file,photo;
+    File file, photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,24 +90,26 @@ public class MainActivity extends AppCompatActivity {
         rankingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (file.exists()) {
+
+                    recuperarJugadores();
+
+                }
                 Intent intent = new Intent(v.getContext(), Ranking2Activity.class);
                 startActivity(intent);
             }
         });
-exit.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        //Ranking2Activity ra=new Ranking2Activity();
-        // ra.salida();
-
-       salida();
-    }
-});
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                salida();
             }
-public void salida(){
-        finish();
-}
+        });
+    }
 
+    public void salida() {
+        finish();
+    }
 
 
     public void dialogo() {
@@ -132,8 +126,6 @@ public void salida(){
         builder.setCancelable(false);
         final EditText input = new EditText(this);
         builder.setView(input);
-
-
         builder
                 .setPositiveButton(
                         "Añadir",
@@ -146,21 +138,18 @@ public void salida(){
                                 nickname = input.getText().toString();
                                 int numm = contadorIntentos;
                                 j1 = new Jugador(nickname, numm);
-                               // photo= createImageFile();
-                                //System.out.println(j1.getCurrentPhotoPath());
                                 contadorIntentos = 0;
                                 numberToSolve = new Random().nextInt(100);
-                                if(j1.getCurrentPhotoPath()==null){
+                                if (j1.getCurrentPhotoPath() == null) {
                                     dispatchTakePictureIntent();
                                 }
-                               if(file.exists()){
-                                   recuperarJugadores();
+                                if (file.exists()) {
+                                    recuperarJugadores();
                                 }
                                 players.add(j1);
                                 escrituraJugadoresXML();
                             }
                         });
-
         builder
                 .setNegativeButton(
                         "Cancelar",
@@ -175,11 +164,10 @@ public void salida(){
                             }
                         });
 
-
         AlertDialog alertDialog = builder.create();
-
         alertDialog.show();
     }
+
     public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -192,8 +180,9 @@ public void salida(){
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
+                        "com.example.pr1_2_endevinaelnombre.fileprovider",
                         photoFile);
+                j1.setUri(photoURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -219,9 +208,9 @@ public void salida(){
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-           // Bundle extras = data.getExtras();
+            // Bundle extras = data.getExtras();
             //Bitmap imageBitmap = (Bitmap) extras.get("data");
-            j1.setUri(Uri.parse(j1.currentPhotoPath));
+            // j1.setUri(Uri.parse(j1.currentPhotoPath));
         }
     }
 
@@ -251,8 +240,8 @@ public void salida(){
                 Element ePuntuacion = doc.createElement("puntuacion");
                 ePuntuacion.appendChild(doc.createTextNode(String.valueOf(players.get(i).punts)));
                 eJugador.appendChild(ePuntuacion);
-              Element eFotoPath = doc.createElement("UriPath");
-                eFotoPath.appendChild(doc.createTextNode(players.get(i).getCurrentPhotoPath()));
+                Element eFotoPath = doc.createElement("uriPath");
+                eFotoPath.appendChild(doc.createTextNode(String.valueOf(players.get(i).getUri())));
                 eJugador.appendChild(eFotoPath);
             }
             // clases necesarias finalizar la creación del archivo XML
@@ -266,7 +255,7 @@ public void salida(){
         }
     }
 
-    public  void recuperarJugadores() {
+    public void recuperarJugadores() {
         players.clear();
         File file = new File(getFilesDir(), "players.xml");
         try {
@@ -283,7 +272,7 @@ public void salida(){
                     Jugador j1 = new Jugador();
                     j1.nom = eElement.getElementsByTagName("nombre").item(0).getTextContent();
                     j1.punts = Integer.parseInt(eElement.getElementsByTagName("puntuacion").item(0).getTextContent());
-                   j1.currentPhotoPath=eElement.getElementsByTagName("UriPath").item(0).getTextContent();
+                    j1.uri = Uri.parse(eElement.getElementsByTagName("uriPath").item(0).getTextContent());
                     players.add(j1);
                 }
             }

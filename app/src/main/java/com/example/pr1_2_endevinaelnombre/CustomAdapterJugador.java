@@ -47,7 +47,7 @@ public class CustomAdapterJugador extends BaseAdapter implements ListAdapter {
         TextView listItemText = view.findViewById(R.id.list_item_string1);
         imageView.setImageURI(arrJugadors.get(position).getUri());
         listItemText.setText(arrJugadors.get(position).toString());
-
+    notifyDataSetChanged();
         return view;
     }
 }
